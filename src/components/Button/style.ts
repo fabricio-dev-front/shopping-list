@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   button: {
     width: "100%",
-    height: 38,
+    height: 48,
     backgroundColor: "#2c46b1",
     borderRadius: 8,
     justifyContent: "center",
