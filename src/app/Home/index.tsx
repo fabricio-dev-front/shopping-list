@@ -7,7 +7,8 @@ export const Home = () => {
   return (
     <View style={styles.container}>
       <Image source={require("@/assets/logo.png")} style={styles.logo} />
-      <Button text="props" activeOpacity={0.5} />
+      <Button text="Adicionar" activeOpacity={0.5} />
+      <Button />
     </View>
   );
 };
