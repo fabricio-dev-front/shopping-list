@@ -15,8 +15,18 @@ export const styles = StyleSheet.create({
 
   form: {
     width: "100%",
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     gap: 15,
     marginTop: 30,
+  },
+  content: {
+    flex: 1,
+    width: "100%",
+    marginTop: 30,
+    paddingTop: 24,
+    paddingHorizontal: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    backgroundColor: "#1A1A1A",
   },
 });
