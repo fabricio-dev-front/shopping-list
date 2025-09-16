@@ -22,13 +22,17 @@ const ITEMS_MOCK = [
 
 export const Home = () => {
   const [filter, setFilter] = useState(FilterStatus.PENDING);
+  const [description, setDescription] = useState("");
 
   return (
     <View style={styles.container}>
       <Image source={require("@/assets/logo.png")} style={styles.logo} />
 
       <View style={styles.form}>
-        <Input placeholder="O que você deseja comprar?" />
+        <Input
+          placeholder="O que você deseja comprar?"
+          onChangeText={(value) => setDescription(value)}
+        />
         <Button text="Adicionar" activeOpacity={0.5} />
       </View>
 
