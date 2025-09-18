@@ -40,8 +40,15 @@ async function addItem(
   return updatedItems;
 }
 
+async function removeItem(id: string): Promise<void> {
+  const items = await get();
+  const filterItems = items.filter((item) => item.id !== id);
+  await saveItems(filterItems);
+}
+
 export const itemsStorage = {
   get,
   getByStatus,
   addItem,
+  removeItem,
 };
