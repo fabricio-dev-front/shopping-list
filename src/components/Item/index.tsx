@@ -26,7 +26,14 @@ export const Item = ({ data, onStatus, onRemove }: Props) => {
 
       <Text style={styles.description}>{data.description}</Text>
 
-      <TouchableOpacity activeOpacity={0.7} onPress={onRemove}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={onRemove}
+        style={{
+          paddingHorizontal: 14,
+          height: "100%",
+        }}
+      >
         <Trash2 size={18} />
       </TouchableOpacity>
     </View>
