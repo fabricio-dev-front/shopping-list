@@ -1,5 +1,12 @@
-import { useState } from "react";
-import { Image, View, TouchableOpacity, Text, FlatList } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  Alert,
+} from "react-native";
 
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
@@ -8,21 +15,55 @@ import { Item } from "@/components/Item";
 
 import { styles } from "./style";
 import { FilterStatus } from "@/types/FilterStatus";
+import { itemsStorage, ItemsTypeStrorage } from "@/storage/itemsStorege";
 
-const FILTER_STATUS: FilterStatus[] = [FilterStatus.DONE, FilterStatus.PENDING];
-
-const ITEMS_MOCK = [
-  { id: "1", status: FilterStatus.DONE, description: "Comprar pão" },
-  { id: "2", status: FilterStatus.PENDING, description: "Comprar leite" },
-  { id: "3", status: FilterStatus.DONE, description: "Comprar ovos" },
-  { id: "4", status: FilterStatus.PENDING, description: "Comprar frutas" },
-  { id: "5", status: FilterStatus.DONE, description: "Comprar verduras" },
-  { id: "6", status: FilterStatus.PENDING, description: "Comprar carne" },
-];
+const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
 export const Home = () => {
   const [filter, setFilter] = useState(FilterStatus.PENDING);
   const [description, setDescription] = useState("");
+  const [items, setItems] = useState<ItemsTypeStrorage[]>([]);
+
+  async function handleAddItem() {
+    if (!description.trim()) {
+      return Alert.alert("Adicionar", "Adicione um item para comprar.");
+    }
+
+    const newItem = {
+      id: Math.random().toString(36).substring(2),
+      description,
+      status: FilterStatus.PENDING,
+    };
+
+    await itemsStorage.addItem(newItem);
+    await itemsByStatus();
+
+    Alert.alert("Adicionar", `Item adicionado: ${description}`);
+    setFilter(FilterStatus.PENDING);
+    setDescription("");
+  }
+
+  async function itemsByStatus() {
+    try {
+      const data = await itemsStorage.getByStatus(filter);
+      setItems(data);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível carregar os itens.");
+    }
+  }
+
+  async function handleRemoveItem(id: string) {
+    try {
+      await itemsStorage.removeItem(id);
+      await itemsByStatus();
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível remover o item.");
+    }
+  }
+
+  useEffect(() => {
+    itemsByStatus();
+  }, [filter]);
 
   return (
     <View style={styles.container}>
@@ -31,9 +72,10 @@ export const Home = () => {
       <View style={styles.form}>
         <Input
           placeholder="O que você deseja comprar?"
+          value={description}
           onChangeText={(value) => setDescription(value)}
         />
-        <Button text="Adicionar" activeOpacity={0.5} />
+        <Button text="Adicionar" onPress={handleAddItem} activeOpacity={0.5} />
       </View>
 
       <View style={styles.content}>
@@ -53,10 +95,14 @@ export const Home = () => {
         </View>
 
         <FlatList
-          data={ITEMS_MOCK}
+          data={items}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Item data={item} onStatus={() => {}} onRemove={() => {}} />
+            <Item
+              data={item}
+              onStatus={() => {}}
+              onRemove={() => handleRemoveItem(item.id)}
+            />
           )}
           showsHorizontalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
