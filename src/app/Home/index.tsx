@@ -61,6 +61,22 @@ export const Home = () => {
     }
   }
 
+  async function onClear() {
+    try {
+      await itemsStorage.clear();
+      setItems([]);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível remover os itens.");
+    }
+  }
+
+  function handleClearItems() {
+    Alert.alert("Limpar", "Deseja realmente limpar todos os itens?", [
+      { text: "Não", style: "cancel" },
+      { text: "Sim", onPress: () => onClear() },
+    ]);
+  }
+
   useEffect(() => {
     itemsByStatus();
   }, [filter]);
@@ -89,7 +105,10 @@ export const Home = () => {
             />
           ))}
 
-          <TouchableOpacity style={styles.buttonClear}>
+          <TouchableOpacity
+            style={styles.buttonClear}
+            onPress={handleClearItems}
+          >
             <Text style={styles.clearText}>Limpar</Text>
           </TouchableOpacity>
         </View>
