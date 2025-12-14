@@ -38,7 +38,6 @@ export const Home = () => {
     await itemsStorage.addItem(newItem);
     await itemsByStatus();
 
-    Alert.alert("Adicionar", `Item adicionado: ${description}`);
     setFilter(FilterStatus.PENDING);
     setDescription("");
   }
